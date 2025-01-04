@@ -6,13 +6,17 @@ import { HeaderComponent } from './components/header/header.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.component';
+import { PaginationComponent } from './components/pagination/pagination.component';
+import { ModalComponent } from './components/modal/modal.component';
 
 @NgModule({
   declarations: [
     HeaderComponent,
     SidebarComponent,
     FooterComponent,
-    BreadcrumbsComponent
+    BreadcrumbsComponent,
+    PaginationComponent,
+    ModalComponent
   ],
   imports: [
     CommonModule,
@@ -25,6 +29,8 @@ import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.compo
     SidebarComponent,
     FooterComponent,
     BreadcrumbsComponent,
+    PaginationComponent,
+    ModalComponent,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,

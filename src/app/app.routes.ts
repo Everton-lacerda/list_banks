@@ -10,14 +10,14 @@ export const routes: Routes = [
   },
   {
     path: 'bank',
-    data: { breadcrumb: 'Bank' },
+    data: { breadcrumb: 'bancos' },
     children: [
       { path: '', redirectTo: 'list', pathMatch: 'full' },
       {
         path: 'list',
         loadComponent: () =>
           import('./bank/list/list.component').then((m) => m.ListComponent),
-        data: { breadcrumb: 'Lista de Bancos' },
+        data: { breadcrumb: 'Cadastro de Bancos' },
       },
       {
         path: 'details/:id',
