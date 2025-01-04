@@ -1,0 +1,21 @@
+<div class="d-flex flex-column flex-shrink-0 p-3 bg-dark text-white sidebar" [class.collapsed]="isCollapsed">
+  <div class="sidebar-header">
+    <a routerLink="/bank/list" class="d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+      <span class="fs-4 text-center " *ngIf="!isCollapsed">My <Strong>BANKS</Strong></span>
+      <span class="fs-4 text-center " *ngIf="isCollapsed"><Strong>B</Strong></span>
+    </a>
+  </div>
+  <hr>
+  <ul class="nav nav-pills flex-column mb-auto">
+    <li class="nav-item">
+      <a routerLink="/bank/list" routerLinkActive="active" class="nav-link text-white d-flex align-items-center">
+        <i class="bi bi-list me-2"></i> <span class="nav-label" *ngIf="!isCollapsed">Lista de Bancos</span>
+      </a>
+    </li>
+    <li class="nav-item mt-2">
+      <a routerLink="/bank/register" routerLinkActive="active" class="nav-link text-white d-flex align-items-center">
+        <i class="bi bi-plus-circle me-2"></i> <span class="nav-label" *ngIf="!isCollapsed">Cadastrar Banco</span>
+      </a>
+    </li>
+  </ul>
+</div>

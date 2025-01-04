@@ -1,0 +1,28 @@
+.navbar {
+  .navbar-toggler {
+    border: none;
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  .nav-icon {
+    display: flex;
+    align-items: center;
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+    }
+  }
+
+  .dropdown-menu {
+    min-width: 200px;
+  }
+}
