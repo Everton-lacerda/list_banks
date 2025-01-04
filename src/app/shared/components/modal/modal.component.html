@@ -1,0 +1,23 @@
+<div
+  class="modal fade show"
+  tabindex="-1"
+  [class.d-block]="showModal"
+  [class.d-none]="!showModal"
+  (click)="closeModal()"
+>
+  <div class="modal-dialog" (click)="$event.stopPropagation()">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ modalTitle }}</h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+      <div class="modal-body">
+        <p>{{ modalBody }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+        <button type="button" class="btn btn-danger" (click)="confirmDeletion()">Excluir</button>
+      </div>
+    </div>
+  </div>
+</div>
