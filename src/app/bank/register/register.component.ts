@@ -21,6 +21,9 @@ export class RegisterComponent implements OnInit {
     status: { id: '', descricao: '' },
   };
 
+  showModal: boolean = false;
+  selectedItem: string = '';
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -44,7 +47,7 @@ export class RegisterComponent implements OnInit {
       },
       error: () => {
         this.toastr.error('Erro ao carregar os detalhes do banco.', 'Erro');
-      }
+      },
     });
   }
 
@@ -57,7 +60,7 @@ export class RegisterComponent implements OnInit {
         },
         error: () => {
           this.toastr.error('Erro ao atualizar banco.', 'Erro');
-        }
+        },
       });
     } else {
       this.bankService.addBank(this.bank).subscribe({
@@ -67,7 +70,7 @@ export class RegisterComponent implements OnInit {
         },
         error: () => {
           this.toastr.error('Erro ao cadastrar banco.', 'Erro');
-        }
+        },
       });
     }
   }
@@ -77,16 +80,38 @@ export class RegisterComponent implements OnInit {
   }
 
   deleteBank(): void {
-    if (confirm('Deseja realmente excluir este banco?')) {
-      this.bankService.deleteBank(this.bankId!).subscribe({
-        next: () => {
-          this.toastr.success('Banco excluído com sucesso!', 'Sucesso');
-          this.router.navigate(['/bank/list']);
-        },
-        error: () => {
-          this.toastr.error('Erro ao excluir banco.', 'Erro');
-        }
-      });
-    }
+    this.selectedItem = this.bank.descricao || 'este banco';
+    this.showModal = true;
   }
+
+  confirmDeletion(): void {
+    this.bankService.deleteBank(this.bankId!).subscribe({
+      next: () => {
+        this.toastr.success('Banco excluído com sucesso!', 'Sucesso');
+        this.router.navigate(['/bank/list']);
+      },
+      error: () => {
+        this.toastr.error('Erro ao excluir banco.', 'Erro');
+      }
+    });
+    this.closeModal();
+  }
+
+  closeModal(): void {
+    this.showModal = false;
+  }
+
+  // deleteBank(): void {
+  //   if (confirm('Deseja realmente excluir este banco?')) {
+  //     this.bankService.deleteBank(this.bankId!).subscribe({
+  //       next: () => {
+  //         this.toastr.success('Banco excluído com sucesso!', 'Sucesso');
+  //         this.router.navigate(['/bank/list']);
+  //       },
+  //       error: () => {
+  //         this.toastr.error('Erro ao excluir banco.', 'Erro');
+  //       },
+  //     });
+  //   }
+  // }
 }

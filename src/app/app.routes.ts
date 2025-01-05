@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './auth/login/login.component';
 import { AuthGuard } from './guard/auth-guard.guard';
+import { HomeComponent } from './home/home.component';
 
 export const routes: Routes = [
   {
@@ -8,14 +9,17 @@ export const routes: Routes = [
     component: LoginComponent,
   },
   {
+    path: 'home',
+    component: HomeComponent,
+  },
+  {
     path: '',
     redirectTo: '/bank/list',
     pathMatch: 'full',
-    data: { breadcrumb: 'Home' },
   },
   {
     path: 'bank',
-    data: { breadcrumb: 'bancos' },
+    data: { breadcrumb: 'bank' },
     canActivate: [AuthGuard],
     children: [
       { path: '', redirectTo: 'list', pathMatch: 'full' },

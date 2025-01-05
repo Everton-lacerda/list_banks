@@ -1,0 +1,73 @@
+<div class="container-xxl flex-grow-1 container-p-y">
+  <div class="row">
+    <div class="col-12 mb-4">
+      <div class="card shadow-sm">
+        <div class="d-flex align-items-center row">
+          <div class="col-sm-8">
+            <div class="card-body">
+              <h3 class="card-title text-primary mb-4">
+                Dashboard de Gestão de Bancos
+              </h3>
+              <p class="mb-4">
+                Gerencie seus bancos de forma eficiente e segura.
+              </p>
+            </div>
+          </div>
+          <div class="col-sm-4 text-center">
+            <div class="card-body pb-0 px-0">
+              <img
+                src="../../assets/img/illustrations/man-with-laptop.png"
+                class="img-fluid"
+                alt="Resumo Bancos"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body text-center">
+          <h5 class="card-title text-success mb-3">Bancos Ativos</h5>
+          <h4 class="mb-3">{{ activeBanks }}</h4>
+          <p class="text-muted mb-0">Operando normalmente</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body text-center">
+          <h5 class="card-title text-danger mb-3">Bancos Inativos</h5>
+          <h4 class="mb-3">{{ inactiveBanks }}</h4>
+          <p class="text-muted mb-0">Requerem atenção</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4 col-md-12 col-sm-12 mb-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body text-center">
+          <h5 class="card-title text-primary mb-3">Ações Rápidas</h5>
+          <p class="mb-4">Gerencie seus bancos de forma rápida e prática.</p>
+          <div class="row">
+            <div class="col-6">
+              <button class="btn btn-primary w-100" (click)="navigateToList()">
+                Ver Lista
+              </button>
+            </div>
+            <div class="col-6">
+              <button
+                class="btn btn-primary w-100"
+                (click)="navigateToRegister()"
+              >
+                Cadastrar Novo
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -9,6 +9,7 @@
 html,
 body {
   height: 100%;
+  background-color: #F5F5F9;
 }
 
 a {
@@ -18,4 +19,14 @@ a {
 
 button {
   cursor: pointer;
+}
+
+.btn-custom-primary {
+  background-color: #696cff!important;
+  color: #fff;
+}
+
+.btn-custom-secondary {
+  background-color: #ff6c69!important;
+  color: #fff;
 }

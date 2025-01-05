@@ -3,14 +3,23 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 @Component({
   selector: 'app-modal',
   templateUrl: './modal.component.html',
-  styleUrl: './modal.component.scss'
+  styleUrls: ['./modal.component.scss'],
 })
 export class ModalComponent {
   @Input() showModal: boolean = false;
+  @Input() selectedCount: number = 0;
+  @Input() modalTitle: string = 'Confirmar Exclusão';
   @Output() close: EventEmitter<void> = new EventEmitter();
   @Output() confirm: EventEmitter<void> = new EventEmitter();
-  @Input() modalTitle: string = '';
-  @Input() modalBody: string = '';
+
+  get modalBody(): string {
+    if (this.selectedCount === 1) {
+      return 'Confirma a exclusão do registro?';
+    } else if (this.selectedCount > 1) {
+      return `Confirma a exclusão de ${this.selectedCount} registro(s) selecionado(s)?`;
+    }
+    return '';
+  }
 
   closeModal() {
     this.close.emit();

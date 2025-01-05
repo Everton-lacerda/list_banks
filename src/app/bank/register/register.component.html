@@ -1,4 +1,4 @@
-<div class="mt-4">
+<div class="container mt-4">
   <h2>{{ bankId ? 'Editar Banco' : 'Cadastrar Banco' }}</h2>
   <form (ngSubmit)="saveBank()" #bankForm="ngForm">
     <div class="mb-3">
@@ -60,4 +60,12 @@
       </button>
     </div>
   </form>
+
+  <app-modal
+    [showModal]="showModal"
+    [selectedCount]="1"
+    modalTitle="Confirmar Exclusão"
+    (close)="closeModal()"
+    (confirm)="confirmDeletion()"
+  ></app-modal>
 </div>

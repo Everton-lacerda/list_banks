@@ -25,7 +25,7 @@ export class LoginComponent {
     this.authService.login(this.username, this.password).subscribe(
       (response: any) => {
         this.isLoading = false;
-        this.router.navigate(['/bank/list']);
+        this.router.navigate(['/home']);
       },
       (error: any) => {
         this.isLoading = false;

@@ -34,3 +34,12 @@
     min-width: 200px;
   }
 }
+
+.btn-primary {
+  background-color: #696cff!important;
+  color: #fff;
+
+  &:hover {
+    background-color: #6668db!important;
+  }
+}

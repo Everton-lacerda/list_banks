@@ -20,3 +20,35 @@
   color:#fff;
   background-color: #FFCF45;
 }
+
+
+.btn-primary {
+  background-color: #696cff!important;
+  color: #fff;
+
+  &:hover {
+    background-color: #6668db!important;
+  }
+}
+
+.card {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: none;
+  border-radius: 10px;
+}
+
+.text-primary {
+  color: #696cff !important;
+}
+
+.text-success {
+  color: #28a745 !important;
+}
+
+.text-danger {
+  color: #dc3545 !important;
+}
+
+.card-title {
+  font-weight: 600;
+}

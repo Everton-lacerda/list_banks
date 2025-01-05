@@ -15,7 +15,7 @@ import { debounceTime, distinctUntilChanged, Subject, switchMap } from 'rxjs';
 })
 export class ListComponent implements OnInit {
   banks: Bank[] = [];
-  selectedBanks: Bank[] = [];
+  selectedBanks: any[] = [];
   totalItems = 0;
   itemsPerPage = 10;
   currentPage: number = 0;
@@ -23,7 +23,6 @@ export class ListComponent implements OnInit {
   statusFilter = '';
   showModal = false;
   isLoading = false;
-
   sortColumn = 'id';
   sortDirection: 'asc' | 'desc' = 'asc';
 
