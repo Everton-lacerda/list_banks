@@ -8,6 +8,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.component';
 import { PaginationComponent } from './components/pagination/pagination.component';
 import { ModalComponent } from './components/modal/modal.component';
+import { LoadingComponent } from './components/loading/loading.component';
 
 @NgModule({
   declarations: [
@@ -16,13 +17,14 @@ import { ModalComponent } from './components/modal/modal.component';
     FooterComponent,
     BreadcrumbsComponent,
     PaginationComponent,
-    ModalComponent
+    ModalComponent,
+    LoadingComponent
   ],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    RouterModule
+    RouterModule,
   ],
   exports: [
     HeaderComponent,
@@ -31,10 +33,11 @@ import { ModalComponent } from './components/modal/modal.component';
     BreadcrumbsComponent,
     PaginationComponent,
     ModalComponent,
+    LoadingComponent,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    RouterModule
+    RouterModule,
   ]
 })
 export class SharedModule { }

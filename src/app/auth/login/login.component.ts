@@ -1,14 +1,8 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import {
-  ReactiveFormsModule,
-  FormBuilder,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
 import { AuthService } from '../../shared/service/auth.service';
 import { SharedModule } from '../../shared/shared.module';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -18,25 +12,26 @@ import { SharedModule } from '../../shared/shared.module';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
-  loginForm!: FormGroup;
+  username!: string;
+  password!: string;
+  isLoading = false;
 
-  // constructor(
-  //   private fb: FormBuilder,
-  //   private authService: AuthService,
-  //   private router: Router
-  // ) {
-  //   this.loginForm = this.fb.group({
-  //     username: ['', [Validators.required]],
-  //     password: ['', [Validators.required]],
-  //   });
-  // }
+   private router = inject(Router);
+   private toastr = inject(ToastrService);
+   private authService = inject(AuthService);
 
-  // onSubmit() {
-  //   if (this.loginForm.valid) {
-  //     const { username, password } = this.loginForm.value;
-  //     this.authService.login(username, password).subscribe(() => {
-  //       this.router.navigate(['/banco-lista']);
-  //     });
-  //   }
-  // }
+  login() {
+    this.isLoading = true;
+    this.authService.login(this.username, this.password).subscribe(
+      (response: any) => {
+        this.isLoading = false;
+        this.router.navigate(['/bank/list']);
+      },
+      (error: any) => {
+        this.isLoading = false;
+        this.toastr.error('Usuário ou senha inválidos!', 'Erro');
+        console.error('Erro no login', error);
+      }
+    );
+  }
 }

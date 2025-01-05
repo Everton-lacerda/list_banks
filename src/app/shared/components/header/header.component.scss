@@ -22,6 +22,14 @@
     }
   }
 
+  .dropdown-item {
+    cursor: pointer;
+  }
+
+  .disabled {
+    cursor: not-allowed;
+  }
+
   .dropdown-menu {
     min-width: 200px;
   }

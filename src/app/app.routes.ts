@@ -1,16 +1,22 @@
 import { Routes } from '@angular/router';
+import { LoginComponent } from './auth/login/login.component';
+import { AuthGuard } from './guard/auth-guard.guard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/bank/list', pathMatch: 'full', data: { breadcrumb: 'Home' } },
   {
     path: 'login',
-    loadComponent: () =>
-      import('./auth/login/login.component').then((m) => m.LoginComponent),
-    data: { breadcrumb: 'Login' },
+    component: LoginComponent,
+  },
+  {
+    path: '',
+    redirectTo: '/bank/list',
+    pathMatch: 'full',
+    data: { breadcrumb: 'Home' },
   },
   {
     path: 'bank',
     data: { breadcrumb: 'bancos' },
+    canActivate: [AuthGuard],
     children: [
       { path: '', redirectTo: 'list', pathMatch: 'full' },
       {
@@ -28,9 +34,11 @@ export const routes: Routes = [
       {
         path: 'register',
         loadComponent: () =>
-          import('./bank/register/register.component').then((m) => m.RegisterComponent),
+          import('./bank/register/register.component').then(
+            (m) => m.RegisterComponent
+          ),
         data: { breadcrumb: 'Cadastrar Banco' },
-      },
+      }
     ],
   },
 ];

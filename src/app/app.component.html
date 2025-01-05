@@ -1,4 +1,4 @@
-<div class="layout">
+<div class="layout" *ngIf="!isLoginPage; else loginPage">
   <app-header
     class="layout-header"
     [isCollapsed]="isSidebarCollapsed"
@@ -12,10 +12,13 @@
     ></app-sidebar>
     <div class="layout-content" [class.sidebar-collapsed]="isSidebarCollapsed">
       <app-breadcrumbs></app-breadcrumbs>
-      <router-outlet></router-outlet>
+      <router-outlet />
     </div>
   </div>
   <div class="layout-footer" [class.sidebar-collapsed]="isSidebarCollapsed">
     <app-footer></app-footer>
   </div>
 </div>
+<ng-template #loginPage>
+  <router-outlet></router-outlet>
+</ng-template>

@@ -1,6 +1,11 @@
+export interface Status {
+  id: string;
+  descricao: string;
+}
+
 export interface Bank {
   id: number;
-  cod: string;
-  description: string;
-  status: string;
+  codigo: string;
+  descricao: string;
+  status: Status;
 }
