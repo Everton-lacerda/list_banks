@@ -4,7 +4,7 @@ export interface Status {
 }
 
 export interface Bank {
-  id: number;
+  id?: number;
   codigo: string;
   descricao: string;
   status: Status;

@@ -28,7 +28,9 @@ export const routes: Routes = [
       {
         path: 'details/:id',
         loadComponent: () =>
-          import('./bank/edit/edit.component').then((m) => m.EditComponent),
+          import('./bank/register/register.component').then(
+            (m) => m.RegisterComponent
+          ),
         data: { breadcrumb: 'Detalhes' },
       },
       {
@@ -38,7 +40,7 @@ export const routes: Routes = [
             (m) => m.RegisterComponent
           ),
         data: { breadcrumb: 'Cadastrar Banco' },
-      }
+      },
     ],
   },
 ];

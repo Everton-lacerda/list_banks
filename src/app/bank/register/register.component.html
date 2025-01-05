@@ -1,10 +1,63 @@
-<div >
+<div class="mt-4">
   <h2>{{ bankId ? 'Editar Banco' : 'Cadastrar Banco' }}</h2>
-  <form (ngSubmit)="saveBank()">
+  <form (ngSubmit)="saveBank()" #bankForm="ngForm">
     <div class="mb-3">
-      <label for="name" class="form-label">Nome do Banco</label>
-      <input type="text" class="form-control" id="name" [(ngModel)]="bank.name" name="name" required>
+      <label for="codigo" class="form-label">Código</label>
+      <input
+        type="text"
+        class="form-control"
+        id="codigo"
+        [(ngModel)]="bank.codigo"
+        name="codigo"
+        required
+      />
     </div>
-    <button type="submit" class="btn btn-primary">{{ bankId ? 'Salvar' : 'Cadastrar' }}</button>
+
+    <div class="mb-3">
+      <label for="descricao" class="form-label">Descrição</label>
+      <input
+        type="text"
+        class="form-control"
+        id="descricao"
+        [(ngModel)]="bank.descricao"
+        name="descricao"
+        required
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="status" class="form-label">Status</label>
+      <select
+        id="status"
+        class="form-select"
+        [(ngModel)]="bank.status.id"
+        name="status"
+        required
+      >
+        <option value="A">Ativo</option>
+        <option value="I">Inativo</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <button type="submit" class="btn btn-primary" [disabled]="bankForm.invalid">
+        {{ bankId ? 'Atualizar' : 'Cadastrar' }}
+      </button>
+      <button
+        *ngIf="bankId"
+        type="button"
+        class="btn btn-danger ms-2"
+        (click)="deleteBank()"
+      >
+        Excluir
+      </button>
+      <button
+        type="button"
+        class="btn btn-secondary ms-2"
+        (click)="closeForm()"
+      >
+        Fechar
+      </button>
+    </div>
   </form>
 </div>

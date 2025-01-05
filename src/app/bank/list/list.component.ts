@@ -26,7 +26,7 @@ export class ListComponent implements OnInit {
   isLoading = false;
 
   sortColumn = 'id';
-  sortDirection: 'asc' | 'desc' = 'asc'
+  sortDirection: 'asc' | 'desc' = 'asc';
 
   filterSubject = new Subject<void>();
 
@@ -34,10 +34,8 @@ export class ListComponent implements OnInit {
   private bankService = inject(BankService);
   private toastr = inject(ToastrService);
 
-  constructor(){
-    this.filterSubject.pipe(
-      debounceTime(300),
-    ).subscribe({
+  constructor() {
+    this.filterSubject.pipe(debounceTime(300)).subscribe({
       next: (_) => {
         this.loadBanks();
       },
@@ -67,9 +65,9 @@ export class ListComponent implements OnInit {
         },
         error: (error: any) => {
           this.toastr.error('Erro ao carregar bancos', 'Erro');
-          console.log('error', error)
+          console.log('error', error);
           this.isLoading = false;
-        }
+        },
       });
   }
 
@@ -106,10 +104,14 @@ export class ListComponent implements OnInit {
   }
 
   deleteSelected(): void {
-    const ids = this.selectedBanks.map((bank) => bank.id);
+    const ids = this.selectedBanks
+      .map((bank) => bank.id)
+      .filter((id): id is number => id !== undefined);
     this.bankService.deleteBanks(ids).subscribe({
       next: () => {
-        this.banks = this.banks.filter((bank) => !ids.includes(bank.id));
+        this.banks = this.banks.filter(
+          (bank) => bank.id !== undefined && !ids.includes(bank.id)
+        );
         this.selectedBanks = [];
         this.closeModal();
         this.currentPage = 0;
@@ -155,7 +157,9 @@ export class ListComponent implements OnInit {
 
   getSortIcon(column: string): string {
     if (this.sortColumn === column) {
-      return this.sortDirection === 'asc' ? 'bi bi-arrow-up' : 'bi bi-arrow-down';
+      return this.sortDirection === 'asc'
+        ? 'bi bi-arrow-up'
+        : 'bi bi-arrow-down';
     }
     return '';
   }
