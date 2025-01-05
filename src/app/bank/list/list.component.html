@@ -36,17 +36,14 @@
 
   <div *ngIf="isLoading"><app-loading></app-loading></div>
 
-  <table
-    class="table table-bordered table-hover"
-    *ngIf="!isLoading && banks.length > 0"
-  >
-    <thead>
+  <table class="table table-hover" *ngIf="!isLoading && banks.length > 0">
+    <thead class="table-light">
       <tr>
-        <th><input type="checkbox" (change)="selectAll($event)" /></th>
-        <th (click)="sortData('id')">ID <span [ngClass]="getSortIcon('id')"></span></th>
-        <th (click)="sortData('codigo')">Código <span [ngClass]="getSortIcon('codigo')"></span></th>
-        <th (click)="sortData('descricao')">Descrição <span [ngClass]="getSortIcon('descricao')"></span></th>
-        <th>Status</th>
+        <th style="width: 5%;"><input type="checkbox" (change)="selectAll($event)" /></th>
+        <th style="width: 10%;" (click)="sortData('id')">ID <span [ngClass]="getSortIcon('id')"></span></th>
+        <th style="width: 15%;" (click)="sortData('codigo')">Código <span [ngClass]="getSortIcon('codigo')"></span></th>
+        <th style="width: 50%;" (click)="sortData('descricao')">Descrição <span [ngClass]="getSortIcon('descricao')"></span></th>
+        <th style="width: 20%;" (click)="sortData('status')">Status <span [ngClass]="getSortIcon('status')"></span></th>
       </tr>
     </thead>
     <tbody>
@@ -65,8 +62,8 @@
           <span
             class="badge"
             [ngClass]="{
-              'text-bg-success': bank.status.id === 'A',
-              'text-bg-danger': bank.status.id !== 'A'
+              'text-bg-green': bank.status.id === 'A',
+              'text-bg-yellow': bank.status.id !== 'A'
             }"
             >{{ bank.status.descricao }}</span
           >
@@ -80,9 +77,14 @@
   </div>
 
   <div class="d-flex justify-content-between align-items-center mt-5 mb-5">
-    <div *ngIf="!isLoading && banks.length > 0" class="d-flex justify-content-between align-items-center mt-3">
-      <span class="text-muted">Itens por página: <strong>{{ itemsPerPage }}</strong> - </span>
-      <span class="text-muted"> Total de registros: <strong>{{ totalItems | number }}</strong></span>
+    <div
+      *ngIf="!isLoading && banks.length > 0"
+      class="d-flex justify-content-between align-items-center mt-3"
+    >
+      <span class="text-muted">Itens por página: <strong>{{ itemsPerPage }}</strong> -
+      </span>
+      <span class="text-muted">
+        Total de registros: <strong>{{ totalItems | number }}</strong></span>
     </div>
     <app-pagination
       *ngIf="!isLoading && banks.length > 0"

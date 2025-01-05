@@ -15,7 +15,6 @@ import { debounceTime, distinctUntilChanged, Subject, switchMap } from 'rxjs';
 })
 export class ListComponent implements OnInit {
   banks: Bank[] = [];
-  paginatedBanks: Bank[] = [];
   selectedBanks: Bank[] = [];
   totalItems = 0;
   itemsPerPage = 10;
@@ -126,7 +125,7 @@ export class ListComponent implements OnInit {
 
   selectAll(event: any): void {
     if (event.target.checked) {
-      this.selectedBanks = [...this.paginatedBanks];
+      this.selectedBanks = [...this.banks];
     } else {
       this.selectedBanks = [];
     }

@@ -6,6 +6,7 @@
 
   .page-item {
     margin: 0 0.1rem;
+    cursor: pointer;
 
     &.disabled .page-link {
       pointer-events: none;
