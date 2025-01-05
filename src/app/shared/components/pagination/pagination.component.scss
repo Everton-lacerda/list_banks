@@ -1,9 +1,8 @@
 .pagination {
-  display: flex;
-  justify-content: center;
   padding-left: 0;
   list-style: none;
   border-radius: 0.25rem;
+  margin: 0;
 
   .page-item {
     margin: 0 0.1rem;

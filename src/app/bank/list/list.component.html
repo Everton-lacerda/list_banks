@@ -1,22 +1,31 @@
 <div class="mt-4">
   <h2>Cadastro de Bancos</h2>
 
-  <div class="d-flex justify-content-between mb-3">
-    <div class="d-flex">
+  <div class="d-flex justify-content-between mb-3 mt-5">
+    <div class="d-flex w-75">
       <input
         type="text"
-        class="form-control me-2"
-        placeholder="Buscar..."
+        class="form-control me-2 w-50"
+        placeholder="Buscar por descrição..."
         [(ngModel)]="searchTerm"
-        (input)="onSearch()"
+        (ngModelChange)="applyFilters()"
       />
+      <select
+        class="form-select ms-2 w-25"
+        [(ngModel)]="statusFilter"
+        (change)="onStatusChange(statusFilter)"
+      >
+        <option value="">Todos os Status</option>
+        <option value="A">Ativo</option>
+        <option value="I">Inativo</option>
+      </select>
     </div>
     <div>
-      <button class="btn btn-success me-2" (click)="navigateToRegister()">
+      <button class="btn btn-primary px-5 me-2" (click)="navigateToRegister()">
         Novo
       </button>
       <button
-        class="btn btn-danger"
+        class="btn btn-danger px-5"
         [disabled]="selectedBanks.length === 0"
         (click)="confirmDeletion()"
       >
@@ -25,26 +34,23 @@
     </div>
   </div>
 
-  <div *ngIf="isLoading">
-    <app-loading></app-loading>
-  </div>
+  <div *ngIf="isLoading"><app-loading></app-loading></div>
 
   <table
-    class="table table-bordered table-striped"
-    *ngIf="!isLoading && paginatedBanks.length > 0"
+    class="table table-bordered table-hover"
+    *ngIf="!isLoading && banks.length > 0"
   >
     <thead>
       <tr>
         <th><input type="checkbox" (change)="selectAll($event)" /></th>
-        <th>ID</th>
-        <th>Código</th>
-        <th>Descrição</th>
+        <th (click)="sortData('id')">ID <span [ngClass]="getSortIcon('id')"></span></th>
+        <th (click)="sortData('codigo')">Código <span [ngClass]="getSortIcon('codigo')"></span></th>
+        <th (click)="sortData('descricao')">Descrição <span [ngClass]="getSortIcon('descricao')"></span></th>
         <th>Status</th>
-        <th>Ações</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let bank of paginatedBanks">
+      <tr *ngFor="let bank of banks">
         <td>
           <input
             type="checkbox"
@@ -52,42 +58,40 @@
             (change)="toggleSelection(bank)"
           />
         </td>
-        <td>{{ bank.id }}</td>
-        <td>{{ bank.codigo }}</td>
-        <td>{{ bank.descricao }}</td>
-        <td>
+        <td [routerLink]="['/bank/details', bank.id]">{{ bank.id }}</td>
+        <td [routerLink]="['/bank/details', bank.id]">{{ bank.codigo }}</td>
+        <td [routerLink]="['/bank/details', bank.id]">{{ bank.descricao }}</td>
+        <td [routerLink]="['/bank/details', bank.id]">
           <span
             class="badge"
             [ngClass]="{
               'text-bg-success': bank.status.id === 'A',
               'text-bg-danger': bank.status.id !== 'A'
             }"
+            >{{ bank.status.descricao }}</span
           >
-            {{ bank.status.descricao }}
-          </span>
-        </td>
-        <td>
-          <button
-            class="btn btn-primary"
-            [routerLink]="['/bank/details', bank.id]"
-          >
-            Ver Detalhes
-          </button>
         </td>
       </tr>
     </tbody>
   </table>
 
-  <div *ngIf="!isLoading && paginatedBanks.length === 0" class="no-results">
+  <div *ngIf="!isLoading && banks.length === 0" class="no-results">
     Nenhum resultado encontrado.
   </div>
 
-  <app-pagination
-    *ngIf="!isLoading && paginatedBanks.length > 0"
-    [totalItems]="totalItems"
-    [itemsPerPage]="itemsPerPage"
-    (pageChange)="onPageChange($event)"
-  ></app-pagination>
+  <div class="d-flex justify-content-between align-items-center mt-5 mb-5">
+    <div *ngIf="!isLoading && banks.length > 0" class="d-flex justify-content-between align-items-center mt-3">
+      <span class="text-muted">Itens por página: <strong>{{ itemsPerPage }}</strong> - </span>
+      <span class="text-muted"> Total de registros: <strong>{{ totalItems | number }}</strong></span>
+    </div>
+    <app-pagination
+      *ngIf="!isLoading && banks.length > 0"
+      [currentPage]="currentPage"
+      [totalItems]="totalItems"
+      [itemsPerPage]="itemsPerPage"
+      (pageChange)="onPageChange($event)"
+    ></app-pagination>
+  </div>
 
   <app-modal
     [showModal]="showModal"

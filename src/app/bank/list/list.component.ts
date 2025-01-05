@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { BankService } from '../../shared/service/bank.service';
 import { Bank } from '../../shared/models/bank.model';
 import { SharedModule } from '../../shared/shared.module';
+import { debounceTime, distinctUntilChanged, Subject, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-list',
@@ -18,14 +19,30 @@ export class ListComponent implements OnInit {
   selectedBanks: Bank[] = [];
   totalItems = 0;
   itemsPerPage = 10;
-  currentPage = 1;
+  currentPage: number = 0;
   searchTerm = '';
+  statusFilter = '';
   showModal = false;
   isLoading = false;
+
+  sortColumn = 'id';
+  sortDirection: 'asc' | 'desc' = 'asc'
+
+  filterSubject = new Subject<void>();
 
   private router = inject(Router);
   private bankService = inject(BankService);
   private toastr = inject(ToastrService);
+
+  constructor(){
+    this.filterSubject.pipe(
+      debounceTime(300),
+    ).subscribe({
+      next: (_) => {
+        this.loadBanks();
+      },
+    });
+  }
 
   ngOnInit(): void {
     this.loadBanks();
@@ -33,38 +50,47 @@ export class ListComponent implements OnInit {
 
   loadBanks(): void {
     this.isLoading = true;
-    this.bankService.getBanks().subscribe({
-      next: (response: any) => {
-        this.banks = response.content;
-        this.totalItems = response.totalElements;
-        this.updatePaginatedBanks();
-        this.isLoading = false;
-      },
-      error: () => {
-        this.isLoading = false;
-        this.toastr.error('Erro ao carregar bancos.', 'Erro');
-      }
-    });
+    this.bankService
+      .getBanks(
+        this.currentPage,
+        this.itemsPerPage,
+        this.sortColumn,
+        this.sortDirection,
+        this.searchTerm,
+        this.statusFilter
+      )
+      .subscribe({
+        next: (response: any) => {
+          this.banks = response.content;
+          this.totalItems = response.totalElements;
+          this.isLoading = false;
+        },
+        error: (error: any) => {
+          this.toastr.error('Erro ao carregar bancos', 'Erro');
+          console.log('error', error)
+          this.isLoading = false;
+        }
+      });
   }
 
-  updatePaginatedBanks(): void {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    const endIndex = startIndex + this.itemsPerPage;
-    this.paginatedBanks = this.banks.slice(startIndex, endIndex);
+  applyFilters(): void {
+    this.currentPage = 0;
+    this.filterSubject.next();
   }
 
   onPageChange(page: number): void {
     this.currentPage = page;
-    this.updatePaginatedBanks();
+    this.loadBanks();
   }
 
   onSearch(): void {
-    const filteredBanks = this.banks.filter((bank) =>
-      bank.descricao.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
-    this.totalItems = filteredBanks.length;
-    this.currentPage = 1;
-    this.paginatedBanks = filteredBanks.slice(0, this.itemsPerPage);
+    this.loadBanks();
+  }
+
+  onStatusChange(status: string): void {
+    this.currentPage = 0;
+    this.statusFilter = status;
+    this.filterSubject.next();
   }
 
   navigateToRegister(): void {
@@ -86,12 +112,13 @@ export class ListComponent implements OnInit {
         this.banks = this.banks.filter((bank) => !ids.includes(bank.id));
         this.selectedBanks = [];
         this.closeModal();
-        this.updatePaginatedBanks();
+        this.currentPage = 0;
+        this.filterSubject.next();
         this.toastr.success('Bancos excluídos com sucesso!', 'Sucesso');
       },
       error: () => {
         this.toastr.error('Erro ao excluir bancos.', 'Erro');
-      }
+      },
     });
   }
 
@@ -114,5 +141,22 @@ export class ListComponent implements OnInit {
 
   isSelected(bank: Bank): boolean {
     return this.selectedBanks.includes(bank);
+  }
+
+  sortData(column: string): void {
+    if (this.sortColumn === column) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortColumn = column;
+      this.sortDirection = 'asc';
+    }
+    this.loadBanks();
+  }
+
+  getSortIcon(column: string): string {
+    if (this.sortColumn === column) {
+      return this.sortDirection === 'asc' ? 'bi bi-arrow-up' : 'bi bi-arrow-down';
+    }
+    return '';
   }
 }
