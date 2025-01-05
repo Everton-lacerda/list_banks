@@ -1,9 +1,8 @@
-import { HttpEvent, HttpHandlerFn, HttpRequest } from '@angular/common/http';
-import { inject } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
-import { OAuthService } from 'angular-oauth2-oidc';
-import { AuthService } from '../shared/service/auth.service';
+import { HttpRequest, HttpHandlerFn, HttpEvent } from "@angular/common/http";
+import { inject } from "@angular/core";
+import { OAuthService } from "angular-oauth2-oidc";
+import { Observable, catchError, of, switchMap, throwError } from "rxjs";
+import { AuthService } from "../shared/service/auth.service";
 
 export const TokenInterceptor = (req: HttpRequest<any>, next: HttpHandlerFn): Observable<HttpEvent<any>> => {
   const oauthService = inject(OAuthService);
@@ -32,10 +31,14 @@ export const TokenInterceptor = (req: HttpRequest<any>, next: HttpHandlerFn): Ob
               }
             });
             return next(newReq);
+          }),
+          catchError(err => {
+            authService.logout();
+            return of(err);
           })
         );
       }
-      return throwError(error);
+      return of(error);
     })
   );
 };

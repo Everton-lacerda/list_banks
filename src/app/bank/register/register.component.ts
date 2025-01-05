@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { SharedModule } from '../../shared/shared.module';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Bank } from '../../shared/models/bank.model';
 import { BankService } from '../../shared/service/bank.service';
+import { AuthorizationService } from '../../shared/service/authorization.service';
 
 @Component({
   selector: 'app-register',
@@ -24,12 +25,14 @@ export class RegisterComponent implements OnInit {
   showModal: boolean = false;
   selectedItem: string = '';
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private toastr: ToastrService,
-    private bankService: BankService
-  ) {}
+  canAddEdit: boolean = false;
+  canDelete: boolean = false;
+
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private toastr = inject(ToastrService);
+  private bankService = inject(BankService);
+  private authorizationService = inject(AuthorizationService);
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
@@ -38,6 +41,8 @@ export class RegisterComponent implements OnInit {
         this.loadBankDetails(this.bankId);
       }
     });
+
+    this.initializePermissions();
   }
 
   loadBankDetails(id: number): void {
@@ -52,39 +57,45 @@ export class RegisterComponent implements OnInit {
   }
 
   saveBank(): void {
-    if (this.bankId) {
-      this.bankService.updateBank(this.bankId, this.bank).subscribe({
-        next: () => {
-          this.toastr.success('Banco atualizado com sucesso!', 'Sucesso');
-          this.closeForm();
-        },
-        error: () => {
-          this.toastr.error('Erro ao atualizar banco.', 'Erro');
-        },
-      });
-    } else {
-      this.bankService.addBank(this.bank).subscribe({
-        next: () => {
-          this.toastr.success('Banco cadastrado com sucesso!', 'Sucesso');
-          this.closeForm();
-        },
-        error: () => {
-          this.toastr.error('Erro ao cadastrar banco.', 'Erro');
-        },
-      });
+    if (!this.canAddEdit) {
+      this.showPermissionError();
+      return;
     }
-  }
 
-  closeForm(): void {
-    this.router.navigate(['/bank/list']);
+    const action = this.bankId
+      ? this.bankService.updateBank(this.bankId, this.bank)
+      : this.bankService.addBank(this.bank);
+
+    action.subscribe({
+      next: () => {
+        const message = this.bankId
+          ? 'Banco atualizado com sucesso!'
+          : 'Banco cadastrado com sucesso!';
+        this.toastr.success(message, 'Sucesso');
+        this.closeForm();
+      },
+      error: () => {
+        this.toastr.error('Erro ao salvar banco.', 'Erro');
+      },
+    });
   }
 
   deleteBank(): void {
+    if (!this.canDelete) {
+      this.showPermissionError();
+      return;
+    }
+
     this.selectedItem = this.bank.descricao || 'este banco';
     this.showModal = true;
   }
 
   confirmDeletion(): void {
+    if (!this.canDelete) {
+      this.showPermissionError();
+      return;
+    }
+
     this.bankService.deleteBank(this.bankId!).subscribe({
       next: () => {
         this.toastr.success('Banco excluído com sucesso!', 'Sucesso');
@@ -92,7 +103,7 @@ export class RegisterComponent implements OnInit {
       },
       error: () => {
         this.toastr.error('Erro ao excluir banco.', 'Erro');
-      }
+      },
     });
     this.closeModal();
   }
@@ -101,17 +112,22 @@ export class RegisterComponent implements OnInit {
     this.showModal = false;
   }
 
-  // deleteBank(): void {
-  //   if (confirm('Deseja realmente excluir este banco?')) {
-  //     this.bankService.deleteBank(this.bankId!).subscribe({
-  //       next: () => {
-  //         this.toastr.success('Banco excluído com sucesso!', 'Sucesso');
-  //         this.router.navigate(['/bank/list']);
-  //       },
-  //       error: () => {
-  //         this.toastr.error('Erro ao excluir banco.', 'Erro');
-  //       },
-  //     });
-  //   }
-  // }
+  closeForm(): void {
+    this.router.navigate(['/bank/list']);
+  }
+
+  initializePermissions(): void {
+    this.canAddEdit = this.authorizationService.hasAnyRole([
+      'ROLE_BANCO_ADD',
+      'ROLE_BANCO_EDT',
+    ]);
+    this.canDelete = this.authorizationService.hasRole('ROLE_BANCO_DEL');
+  }
+
+  showPermissionError(): void {
+    this.toastr.error(
+      'Você não tem permissão para realizar esta ação.',
+      'Erro'
+    );
+  }
 }

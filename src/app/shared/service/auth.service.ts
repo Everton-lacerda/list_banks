@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
@@ -10,35 +10,33 @@ import { jwtDecode } from 'jwt-decode';
   providedIn: 'root',
 })
 export class AuthService {
-  private refreshTokenInProgress = false;
-
-  constructor(
-    private oauthService: OAuthService,
-    private router: Router,
-    private http: HttpClient
-  ) {}
+  private oauthService = inject(OAuthService);
+  private router = inject(Router);
+  private http = inject(HttpClient);
 
   login(username: string, password: string): Observable<any> {
     const params = new HttpParams()
-    .set('grant_type', 'password')
-    .set('username', username)
-    .set('password', password)
-    .set('client_id', environment.clientId)
-    .set('client_secret', environment.clientSecret)
-    .set('scope', environment.scope);
+      .set('grant_type', 'password')
+      .set('username', username)
+      .set('password', password)
+      .set('client_id', environment.clientId)
+      .set('client_secret', environment.clientSecret)
+      .set('scope', environment.scope);
 
     const headers = new HttpHeaders({
       'Content-Type': 'application/x-www-form-urlencoded',
     });
 
-    return this.http.post<any>(environment.accessTokenURL, params, { headers }).pipe(
-      switchMap(response => {
-        localStorage.setItem('access_token', response.access_token);
-        localStorage.setItem('refresh_token', response.refresh_token);
+    return this.http
+      .post<any>(environment.accessTokenURL, params, { headers })
+      .pipe(
+        switchMap((response) => {
+          localStorage.setItem('access_token', response.access_token);
+          localStorage.setItem('refresh_token', response.refresh_token);
 
-        return of(response);
-      })
-    );
+          return of(response);
+        })
+      );
   }
 
   logout() {
@@ -56,6 +54,13 @@ export class AuthService {
 
     const decodedToken: any = jwtDecode(token);
     const currentTime = Math.floor(Date.now() / 1000);
+
+    if (decodedToken.exp - currentTime <= 60) {
+      this.refreshToken().subscribe({
+        next: () => console.log('Token renovado automaticamente'),
+        error: () => console.error('Erro ao renovar o token automaticamente'),
+      });
+    }
 
     return decodedToken.exp > currentTime;
   }
@@ -86,15 +91,9 @@ export class AuthService {
   }
 
   refreshToken(): Observable<any> {
-    if (this.refreshTokenInProgress) {
-      return of(null);
-    }
-
-    this.refreshTokenInProgress = true;
-
     const refreshToken = localStorage.getItem('refresh_token');
     if (!refreshToken) {
-      return throwError('Refresh token não encontrado');
+      return of(() => new Error('Refresh token not found.'));
     }
 
     const params = new HttpParams()
@@ -107,23 +106,18 @@ export class AuthService {
       'Content-Type': 'application/x-www-form-urlencoded',
     });
 
-    return this.http.post<any>(environment.accessTokenURL, params, { headers }).pipe(
-      switchMap(response => {
-        localStorage.setItem('access_token', response.access_token);
-        localStorage.setItem('refresh_token', response.refresh_token);
-
-        return this.oauthService.processIdToken(response.id_token, response.access_token);
-      }),
-      tap(() => {
-        this.refreshTokenInProgress = false;
-      }),
-      catchError(error => {
-        this.refreshTokenInProgress = false;
-        console.error('Erro ao renovar o token:', error);
-        this.logout();
-        return throwError(error);
-      })
-    );
+    return this.http
+      .post<any>(environment.accessTokenURL, params, { headers })
+      .pipe(
+        tap((response) => {
+          localStorage.setItem('access_token', response.access_token);
+          localStorage.setItem('refresh_token', response.refresh_token);
+        }),
+        catchError((error) => {
+          this.logout();
+          return of(error);
+        })
+      );
   }
 
   autoRefreshToken(): Observable<any> {

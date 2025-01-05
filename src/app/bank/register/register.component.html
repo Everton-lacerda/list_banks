@@ -10,6 +10,7 @@
         [(ngModel)]="bank.codigo"
         name="codigo"
         required
+        [disabled]="!canAddEdit"
       />
     </div>
 
@@ -22,6 +23,7 @@
         [(ngModel)]="bank.descricao"
         name="descricao"
         required
+        [disabled]="!canAddEdit"
       />
     </div>
 
@@ -33,6 +35,7 @@
         [(ngModel)]="bank.status.id"
         name="status"
         required
+        [disabled]="!canAddEdit"
       >
         <option value="A">Ativo</option>
         <option value="I">Inativo</option>
@@ -40,7 +43,11 @@
     </div>
 
     <div class="mb-3">
-      <button type="submit" class="btn btn-primary" [disabled]="bankForm.invalid">
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="bankForm.invalid || !canAddEdit"
+      >
         {{ bankId ? 'Atualizar' : 'Cadastrar' }}
       </button>
       <button
@@ -48,6 +55,7 @@
         type="button"
         class="btn btn-danger ms-2"
         (click)="deleteBank()"
+        [disabled]="!canDelete"
       >
         Excluir
       </button>
@@ -63,8 +71,8 @@
 
   <app-modal
     [showModal]="showModal"
-    [selectedCount]="1"
     modalTitle="Confirmar Exclusão"
+    modalBody="Confirma a exclusão do registro selecionado?"
     (close)="closeModal()"
     (confirm)="confirmDeletion()"
   ></app-modal>

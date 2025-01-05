@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 
 @Injectable({
@@ -12,7 +12,7 @@ export class AuthorizationService {
     'ROLE_BANCO_DEL': () => this.isAdmin(),
   };
 
-  constructor(private authService: AuthService) {}
+  private authService = inject(AuthService);
 
   hasRole(role: string): boolean {
     const roles = this.authService.getUserRoles();

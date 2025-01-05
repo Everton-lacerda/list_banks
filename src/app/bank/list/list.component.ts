@@ -5,6 +5,7 @@ import { BankService } from '../../shared/service/bank.service';
 import { Bank } from '../../shared/models/bank.model';
 import { SharedModule } from '../../shared/shared.module';
 import { debounceTime, distinctUntilChanged, Subject, switchMap } from 'rxjs';
+import { AuthorizationService } from '../../shared/service/authorization.service';
 
 @Component({
   selector: 'app-list',
@@ -28,9 +29,13 @@ export class ListComponent implements OnInit {
 
   filterSubject = new Subject<void>();
 
+  canAdd: boolean = false;
+  canDelete: boolean = false;
+
   private router = inject(Router);
   private bankService = inject(BankService);
   private toastr = inject(ToastrService);
+  private authorizationService = inject(AuthorizationService);
 
   constructor() {
     this.filterSubject.pipe(debounceTime(300)).subscribe({
@@ -42,6 +47,7 @@ export class ListComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadBanks();
+    this.initializePermissions();
   }
 
   loadBanks(): void {
@@ -160,5 +166,12 @@ export class ListComponent implements OnInit {
         : 'bi bi-arrow-down';
     }
     return '';
+  }
+
+  initializePermissions(): void {
+    this.canAdd = this.authorizationService.hasAnyRole([
+      'ROLE_BANCO_ADD',
+    ]);
+    this.canDelete = this.authorizationService.hasRole('ROLE_BANCO_DEL');
   }
 }

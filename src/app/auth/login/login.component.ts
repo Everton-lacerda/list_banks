@@ -16,22 +16,22 @@ export class LoginComponent {
   password!: string;
   isLoading = false;
 
-   private router = inject(Router);
-   private toastr = inject(ToastrService);
-   private authService = inject(AuthService);
+  private router = inject(Router);
+  private toastr = inject(ToastrService);
+  private authService = inject(AuthService);
 
   login() {
     this.isLoading = true;
-    this.authService.login(this.username, this.password).subscribe(
-      (response: any) => {
+    this.authService.login(this.username, this.password).subscribe({
+      next: (response: any) => {
         this.isLoading = false;
         this.router.navigate(['/home']);
       },
-      (error: any) => {
+      error: (error: any) => {
         this.isLoading = false;
         this.toastr.error('Usuário ou senha inválidos!', 'Erro');
         console.error('Erro no login', error);
       }
-    );
+    });
   }
 }
