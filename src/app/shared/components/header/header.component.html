@@ -2,15 +2,19 @@
   <button class="sidebar-toggle btn btn-light" (click)="toggleSidebar()">
     <i class="bi bi-list"></i>
   </button>
-  <div class="collapse navbar-collapse">
-    <ul class="navbar-nav ms-auto">
+
+  <div class="collapse navbar-collapse d-flex justify-content-end align-items-center gap-4">
+    <ul class="navbar-nav ms-auto d-flex align-items-center">
+      <li class="nav-item">
+        <span class="me-2">Bem-vindo <strong>{{ userName }}</strong>!</span>
+      </li>
       <li class="nav-item dropdown">
         <a href="#" data-bs-toggle="dropdown" class="nav-icon pe-md-0">
           <img src="assets/avatar.png" class="avatar img-fluid" alt="User Avatar" />
         </a>
         <div class="dropdown-menu dropdown-menu-end rounded">
           <a class="dropdown-item disabled" aria-disabled="true">Meu Perfil</a>
-            <a class="dropdown-item disabled" aria-disabled="true">Configurações</a>
+          <a class="dropdown-item disabled" aria-disabled="true">Configurações</a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" (click)="logout()">Sair</a>
         </div>

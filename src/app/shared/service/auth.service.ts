@@ -85,6 +85,11 @@ export class AuthService {
     return [];
   }
 
+  getUserName(): string {
+    const user = this.getDecodedToken();
+    return user.name;
+  }
+
   hasRole(role: string): boolean {
     const roles = this.getUserRoles();
     return roles.includes(role);
