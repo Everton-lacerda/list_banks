@@ -2,7 +2,13 @@
 
 ## Descrição Geral
 Este projeto foi desenvolvido como parte de uma solicitação de testes para gerenciar uma aplicação de bancos. 
-Ele contém funcionalidades essenciais como cadastro, listagem, atualização, exclusão de bancos, controle de acesso com roles (perfis de usuários), e autenticação via OAuth2 utilizando o fluxo **Password Grant**. A aplicação foi construída com **Angular** com **Boostrap 5** 
+Ele contém funcionalidades essenciais como cadastro, listagem, atualização, exclusão de bancos, controle de acesso com roles (perfis de usuários), e autenticação via OAuth2 utilizando o fluxo **Password Grant**. A aplicação foi construída com **Angular** com **Boostrap 
+5** 
+
+![dev admin](https://github.com/user-attachments/assets/8c9f63d1-9f91-4943-92db-c1d84bf8427c)
+
+![dev admin _v](https://github.com/user-attachments/assets/368f0b9f-392f-408d-abb7-213585d898d9)
+
 
 ## Estrutura do Projeto
 
